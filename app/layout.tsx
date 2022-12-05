@@ -1,7 +1,9 @@
 import '#/styles/globals.css';
-import { AddressBar } from '#/ui/AddressBar';
-import { GlobalNav } from '#/ui/GlobalNav';
-import { VercelLogo } from '#/ui/VercelLogo';
+import Nav from '#/ui/Layout/nav';
+import Sidebar from '#/ui/Layout/sidebar';
+import { SidebarProvider } from '#/context/sidebarContext';
+import { DarkmodeProvider } from '#/context/darkModeContext';
+import { CommandProvider } from '#/context/commandContext';
 
 export default function RootLayout({
   children,
@@ -9,62 +11,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="[color-scheme:dark]">
-      <head />
-      <body className="overflow-y-scroll bg-gray-1100 bg-[url('/grid.svg')]">
-        <GlobalNav />
-
-        <div className="lg:pl-72">
-          <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:py-8 lg:px-8">
-            <div className="rounded-lg bg-vc-border-gradient p-px shadow-lg shadow-black/20">
-              <div className="rounded-lg bg-black">
-                <AddressBar />
+    <CommandProvider>
+      <SidebarProvider>
+        <DarkmodeProvider>
+          <html lang="en">
+            <head />
+            <body>
+              <div className="relative flex min-h-screen w-full flex-col items-center dark:bg-slate-900">
+                <Nav />
+                <div className="z-10 w-full max-w-[90rem] flex-1 px-4 sm:px-6 md:px-8">
+                  <Sidebar directory="/app" />
+                  <main className={`${'lg:pl-[19.5rem]'}`}>{children}</main>
+                </div>
+                <div className="griddy fixed top-16 h-48 w-full opacity-50">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white dark:to-slate-900" />
+                </div>
               </div>
-            </div>
-
-            <div className="rounded-lg bg-vc-border-gradient p-px shadow-lg shadow-black/20">
-              <div className="rounded-lg bg-black p-3.5 lg:p-6">{children}</div>
-            </div>
-
-            <div className="rounded-lg bg-vc-border-gradient p-px shadow-lg shadow-black/20">
-              <div className="rounded-lg bg-black">
-                <Byline />
-              </div>
-            </div>
-          </div>
-        </div>
-      </body>
-    </html>
-  );
-}
-
-function Byline() {
-  return (
-    <div className="flex items-center justify-between space-x-4 p-3.5 lg:px-5 lg:py-3">
-      <div className="flex items-center space-x-1.5">
-        <div className="text-sm text-gray-600">By</div>
-        <a href="https://vercel.com" title="Vercel">
-          <div className="w-16 text-gray-300 hover:text-gray-50">
-            <VercelLogo />
-          </div>
-        </a>
-      </div>
-
-      <div className="text-sm text-gray-600">
-        <a
-          className="underline decoration-dotted underline-offset-4 hover:text-gray-400"
-          href="https://github.com/vercel/app-playground"
-        >
-          View code
-        </a>
-        {' or '}
-        <a
-          className="underline decoration-dotted underline-offset-4 hover:text-gray-400"
-          href="https://vercel.com/templates/next.js/app-directory"
-        >
-          deploy your own
-        </a>
-      </div>
-    </div>
+            </body>
+          </html>
+        </DarkmodeProvider>
+      </SidebarProvider>
+    </CommandProvider>
   );
 }
